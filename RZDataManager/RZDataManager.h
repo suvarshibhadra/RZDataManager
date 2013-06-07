@@ -27,6 +27,9 @@ typedef void (^RZDataManagerImportBlock)(NSManagedObjectContext* moc);
 - (id)objectForEntity:(NSString*)entity withValue:(id)value forKeyPath:(NSString*)keyPath usingMOC:(NSManagedObjectContext*)moc;
 - (id)objectForEntity:(NSString*)entity withValue:(id)value forKeyPath:(NSString*)keyPath usingMOC:(NSManagedObjectContext*)moc create:(BOOL)create;
 
+- (id)objectForEntity:(NSString*)entity withValue:(id)value forKeyPath:(NSString*)keyPath where:(NSPredicate*)predicate usingMOC:(NSManagedObjectContext*)moc create:(BOOL)create;
+- (id)objectForEntity:(NSString*)entity withValue:(id)value forKeyPath:(NSString*)keyPath inSet:(NSSet*)objects usingMOC:(NSManagedObjectContext*)moc create:(BOOL)create;
+
 - (void)saveContext:(BOOL)wait;
 - (NSURL*)applicationDocumentsDirectory;
 
