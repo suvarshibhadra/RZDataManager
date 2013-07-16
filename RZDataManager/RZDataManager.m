@@ -15,12 +15,12 @@
 
 @implementation RZDataManager
 
-+ (RZDataManager*)defaultManager
++ (instancetype)defaultManager
 {
     static RZDataManager *_defaultManager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _defaultManager = [[RZDataManager alloc] init];
+        _defaultManager = [[self alloc] init];
     });
     
     return _defaultManager;

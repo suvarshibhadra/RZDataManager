@@ -21,7 +21,7 @@ typedef void (^RZDataManagerImportBlock)(NSManagedObjectContext* moc);
 @property (nonatomic, strong) NSString *persistentStoreType;
 @property (nonatomic, strong) NSURL *persistentStoreURL;
 
-+ (RZDataManager*)defaultManager;
++ (instancetype)defaultManager;
 
 - (void)importInBackgroundUsingBlock:(RZDataManagerImportBlock)importBlock completion:(RZDataManagerCompletionBlock)completionBlock;
 - (id)objectForEntity:(NSString*)entity withValue:(id)value forKeyPath:(NSString*)keyPath usingMOC:(NSManagedObjectContext*)moc;
