@@ -11,6 +11,8 @@
 typedef void (^RZDataManagerCompletionBlock)();
 typedef void (^RZDataManagerImportBlock)(NSManagedObjectContext* moc);
 
+OBJC_EXTERN NSString * const kRZDataManagerDidResetDatabaseNotification;
+
 @interface RZDataManager : NSObject
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
@@ -32,5 +34,7 @@ typedef void (^RZDataManagerImportBlock)(NSManagedObjectContext* moc);
 
 - (void)saveContext:(BOOL)wait;
 - (NSURL*)applicationDocumentsDirectory;
+
+- (void)resetDatabase;
 
 @end

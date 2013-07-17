@@ -7,6 +7,8 @@
 
 #import "RZDataManager.h"
 
+NSString * const kRZDataManagerDidResetDatabaseNotification = @"RZDataManagerDidResetDatabase";
+
 @interface RZDataManager ()
 
 @property (nonatomic, strong) NSManagedObjectContext *backgroundMoc;
@@ -284,6 +286,24 @@
             [backgroundMoc performBlock:saveBackground];
         }
     }
+}
+
+- (void)resetDatabase
+{
+    self.backgroundMoc = nil;
+    self.managedObjectContext = nil;
+    self.persistentStoreCoordinator = nil;
+
+    if (self.persistentStoreType == NSSQLiteStoreType)
+    {
+        // TODO: delete database file
+    }
+    else if (self.persistentStoreType == NSBinaryStoreType)
+    {
+        // TODO: delete binary file
+    }
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRZDataManagerDidResetDatabaseNotification object:self];
 }
 
 #pragma mark - Application's Documents directory
