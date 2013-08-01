@@ -9,6 +9,13 @@
 #import "NSDictionary+NonNSNull.h"
 #import "NSString+HTMLEntities.h"
 
+// Add to build flags to enable logging
+#if RZDATAIMPORTER_LOG_ENABLED
+    #define RZDataImporterError(fmt, ...) NSLog((@"[RZDataImporter] Error: " fmt), ##__VA_ARGS__)
+#else
+    #define RZDataImporterError(fmt, ...)
+#endif
+
 static NSString* const kRZDataImporterDateFormat = @"Date Format";
 static NSString* const kRZDataImporterDataKeys = @"Data Keys";
 static NSString* const kRZDataImporterIgnoreKeys = @"Ignore Keys";
@@ -105,7 +112,7 @@ static NSString* const kRZDataImporterISODateFormat = @"yyyy-MM-dd`T`hh:mm:ss'Z'
             
         }
         else{
-            NSLog(@"RZDataImporter: Could not find mapping for class %@", NSStringFromClass([object class]));
+            RZDataImporterError(@"RZDataImporter: Could not find mapping for class %@", NSStringFromClass([object class]));
         }
     }
 }
@@ -269,14 +276,14 @@ static NSString* const kRZDataImporterISODateFormat = @"yyyy-MM-dd`T`hh:mm:ss'Z'
                     [self importValue:value toObject:object fromKey:keyPath withKeyMapping:mappingInfo];
                 }
                 else if (![keysToIgnore containsObject:keyPath]){
-                    NSLog(@"RZDataImporter: Could not find mapping for key path %@ in object of class %@", keyPath, NSStringFromClass([object class]));
+                    RZDataImporterError(@"RZDataImporter: Could not find mapping for key path %@ in object of class %@", keyPath, NSStringFromClass([object class]));
                 }
                 
             }
             
         }
         else if (![keysToIgnore containsObject:key]){
-            NSLog(@"RZDataImporter: Could not find mapping for key %@ in object of class %@", key, NSStringFromClass([object class]));
+            RZDataImporterError(@"RZDataImporter: Could not find mapping for key %@ in object of class %@", key, NSStringFromClass([object class]));
         }
         
     }
@@ -324,16 +331,16 @@ static NSString* const kRZDataImporterISODateFormat = @"yyyy-MM-dd`T`hh:mm:ss'Z'
                     [invocation invoke];
                 }
                 @catch (NSException *exception) {
-                    NSLog(@"RZDataImporter: Error invoking setter %@ on object of class %@: %@", NSStringFromSelector(importSelector), NSStringFromClass([object class]), exception);
+                    RZDataImporterError(@"RZDataImporter: Error invoking setter %@ on object of class %@: %@", NSStringFromSelector(importSelector), NSStringFromClass([object class]), exception);
                 }
                 
             }
             else{
-                NSLog(@"RZDataImporter: Too few arguments for import selector %@ on object of class %@", selectorName, NSStringFromClass([object class]));
+                RZDataImporterError(@"RZDataImporter: Too few arguments for import selector %@ on object of class %@", selectorName, NSStringFromClass([object class]));
             }
         }
         else{
-            NSLog(@"RZDataImporter: Unable to perform custom import selector %@ on object of class %@", selectorName, NSStringFromClass([object class]));
+            RZDataImporterError(@"RZDataImporter: Unable to perform custom import selector %@ on object of class %@", selectorName, NSStringFromClass([object class]));
         }
         
     }
@@ -399,12 +406,12 @@ static NSString* const kRZDataImporterISODateFormat = @"yyyy-MM-dd`T`hh:mm:ss'Z'
                 [invocation invoke];
             }
             @catch (NSException *exception) {
-                NSLog(@"RZDataImporter: Error invoking setter %@ on object of class %@: %@", NSStringFromSelector(setter), NSStringFromClass([object class]), exception);
+                RZDataImporterError(@"RZDataImporter: Error invoking setter %@ on object of class %@: %@", NSStringFromSelector(setter), NSStringFromClass([object class]), exception);
             }
             
         }
         else{
-            NSLog(@"RZDataImporter: Object does not repsond to setter %@", NSStringFromSelector(setter));
+            RZDataImporterError(@"RZDataImporter: Object does not repsond to setter %@", NSStringFromSelector(setter));
         }
         
     }
@@ -433,7 +440,7 @@ static NSString* const kRZDataImporterISODateFormat = @"yyyy-MM-dd`T`hh:mm:ss'Z'
             newValue = [NSDate dateWithTimeIntervalSince1970:[(NSNumber*)value doubleValue]];
         }
         else if (![value isKindOfClass:[NSDate class]]){
-            NSLog(@"RZDataImporter: Object of class %@ cannot be converted to NSDate", NSStringFromClass([value class]));
+            RZDataImporterError(@"RZDataImporter: Object of class %@ cannot be converted to NSDate", NSStringFromClass([value class]));
         }
     }
     else if ([conversionType isEqualToString:kRZDataImporterConversionTypeNumber])
@@ -443,7 +450,7 @@ static NSString* const kRZDataImporterISODateFormat = @"yyyy-MM-dd`T`hh:mm:ss'Z'
             newValue = [self.numberFormatter numberFromString:(NSString*)value];
         }
         else if (![value isKindOfClass:[NSNumber class]]){
-            NSLog(@"RZDataImporter: Object of class %@ cannot be converted to NSNumber", NSStringFromClass([value class]));
+            RZDataImporterError(@"RZDataImporter: Object of class %@ cannot be converted to NSNumber", NSStringFromClass([value class]));
         }
     }
     else if ([conversionType isEqualToString:kRZDataImporterConversionTypeString])
